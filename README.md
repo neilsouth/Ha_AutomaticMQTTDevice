@@ -33,6 +33,8 @@ lib_deps =
 	https://github.com/neilsouth/Ha_AutomaticMQTTDevice.git
 ```
 
+If you also need an MQTT connection manager for ESP8266 or ESP32 projects, the companion [`EspMQTTClient`](https://github.com/neilsouth/EspMQTTClient) library is a good fit.
+
 ### Local library
 
 Clone or copy this repository into your project's `lib/Ha_AutoMQTTDevice` folder.
@@ -43,6 +45,7 @@ Clone or copy this repository into your project's `lib/Ha_AutoMQTTDevice` folder
 - Tested in a PlatformIO workflow
 - Works with MQTT clients that provide compatible `publish(topic, payload)` and `publish(topic, payload, retain)` methods
 - Common fit: ESP8266 and ESP32 projects using an external MQTT connection manager
+- Recommended companion client: [`EspMQTTClient`](https://github.com/neilsouth/EspMQTTClient)
 
 ## Quick Start
 
