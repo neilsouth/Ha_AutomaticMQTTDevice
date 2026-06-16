@@ -1,5 +1,9 @@
 # Ha_AutoMQTTDevice
 
+[![Version](https://img.shields.io/badge/version-1.0.0-2ea44f.svg)](https://github.com/neilsouth/Ha_AutomaticMQTTDevice/releases)
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-compatible-orange.svg)](https://platformio.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Small Arduino/ESP helper library for publishing Home Assistant MQTT discovery payloads and device state JSON.
 
 The library is aimed at microcontroller projects that already have an MQTT client and want a lightweight way to:
@@ -32,6 +36,13 @@ lib_deps =
 ### Local library
 
 Clone or copy this repository into your project's `lib/Ha_AutoMQTTDevice` folder.
+
+## Compatibility
+
+- Designed for Arduino-style embedded projects
+- Tested in a PlatformIO workflow
+- Works with MQTT clients that provide compatible `publish(topic, payload)` and `publish(topic, payload, retain)` methods
+- Common fit: ESP8266 and ESP32 projects using an external MQTT connection manager
 
 ## Quick Start
 
@@ -130,6 +141,45 @@ light->setBrightness(180);
 ```
 
 This produces state payloads in the shape:
+
+```json
+{
+	"light": {
+		"state": "ON",
+		"brightness": 180
+	}
+}
+```
+
+## Topic Format
+
+The library generates Home Assistant discovery topics and device state topics for you.
+
+Typical discovery topics look like:
+
+```text
+homeassistant/sensor/temp1234/config
+homeassistant/light/kitchen/config
+```
+
+Typical state topics look like:
+
+```text
+office/state
+homeassistant/light/Kitchen/state
+```
+
+The exact topic depends on the configured sensor type and entity naming.
+
+For single-value entities, state payloads are simple JSON values wrapped in a device object:
+
+```json
+{
+	"temperature": 21.50
+}
+```
+
+For multi-value entities, payloads become nested JSON objects:
 
 ```json
 {
