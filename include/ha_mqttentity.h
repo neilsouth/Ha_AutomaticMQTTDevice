@@ -71,6 +71,13 @@ public:
   int writeUnits(char* buffer, int bufferSizeRemaining);
   int writeIds(char* buffer, int bufferSizeRemaining);
   int writeDeviceJson(char *buffer, int bufferSizeRemaining);
+
+  void setBrightness(int brightness) {
+        setValue(brightness, 1);
+    }
+    int getBrightness() {
+        return innerValues[1].inUse ? innerValues[1].getValueI() : 0;
+    }
 };
 
 #endif
