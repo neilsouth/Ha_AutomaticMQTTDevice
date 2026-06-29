@@ -1,6 +1,6 @@
 # Ha_AutoMQTTDevice
 
-[![Version](https://img.shields.io/badge/version-1.0.0-2ea44f.svg)](https://github.com/neilsouth/Ha_AutomaticMQTTDevice/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-2ea44f.svg)](https://github.com/neilsouth/Ha_AutomaticMQTTDevice/releases)
 [![PlatformIO](https://img.shields.io/badge/PlatformIO-compatible-orange.svg)](https://platformio.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 

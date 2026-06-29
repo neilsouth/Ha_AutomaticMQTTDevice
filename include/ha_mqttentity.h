@@ -31,6 +31,7 @@ private:
   char extraAttributes[256] = "";
   //float value;
   void toLower( char* dest, const char* source , uint16_t destSize);
+  bool usesJsonSchema() const;
   bool inUse = false;
   bool hasCommand = false;
   int expireAfter = 60;

@@ -9,6 +9,11 @@ char innerBuffer[200];
 
 ha_mqttentity::ha_mqttentity() {}
 
+bool ha_mqttentity::usesJsonSchema() const
+{
+  return strstr(extraAttributes, "\"schema\"") != nullptr && strstr(extraAttributes, "\"json\"") != nullptr;
+}
+
 void ha_mqttentity::initialiseEntity(const char *locationGiven, const char *name)
 {
   strcpy(entityClass, name);
@@ -99,13 +104,27 @@ int ha_mqttentity::writeCommandTopic(char *buffer, int bufferSizeRemaining)
 
 int ha_mqttentity::writeUnits(char *buffer, int bufferSizeRemaining)
 {
+  const char *valueTemplates = getValueTemplates();
+  bool hasTemplates = strnlen(valueTemplates, sizeof(innerBuffer)) > 0;
+
   if (strlen(unitOfMeasure) > 0)
   {
-    int written = snprintf(buffer, bufferSizeRemaining, "\"unit_of_measurement\": \"%s\", %s,", unitOfMeasure, getValueTemplates());
+    if (hasTemplates)
+    {
+      int written = snprintf(buffer, bufferSizeRemaining, "\"unit_of_measurement\": \"%s\", %s,", unitOfMeasure, valueTemplates);
+      return written;
+    }
+
+    int written = snprintf(buffer, bufferSizeRemaining, "\"unit_of_measurement\": \"%s\",", unitOfMeasure);
     return written;
   }
 
-  int written = snprintf(buffer, bufferSizeRemaining, "%s,", getValueTemplates());
+  if (!hasTemplates)
+  {
+    return 0;
+  }
+
+  int written = snprintf(buffer, bufferSizeRemaining, "%s,", valueTemplates);
   return written;
 }
 int ha_mqttentity::writeIds(char *buffer, int bufferSizeRemaining)
@@ -214,6 +233,24 @@ const char *ha_mqttentity::getJsonValueString()
   int innerCount = innerValuesCount();
   char* newName = mqttsubentity::replace_char(entityClassLower, ' ', '_', buffer2);
 
+  if (usesJsonSchema())
+  {
+    char *buf = buffer;
+    size_t remaining = sizeof(buffer);
+
+    for (int i = 0; i < innerCount; ++i)
+    {
+      const char *innerValue = innerValues[i].getJson();
+      size_t len = strnlen(innerValue, 200);
+      snprintf(buf, remaining, "%s%s", innerValue, (i < innerCount - 1) ? "," : "");
+      size_t written = len + ((i < innerCount - 1) ? 1 : 0);
+      buf += written;
+      remaining -= written;
+    }
+
+    return buffer;
+  }
+
   if (innerCount == 1)
   {
     snprintf(buffer, sizeof(buffer), "\"%s\" :%s", newName, innerValues[0].getJsonValue());
@@ -300,6 +337,13 @@ void ha_mqttentity::setSubValueTemplate(const char *name, int index)
 
 char *ha_mqttentity::getValueTemplates()
 {
+  innerBuffer[0] = 0;
+
+  if (usesJsonSchema())
+  {
+    return innerBuffer;
+  }
+
   char* buf = innerBuffer;
   size_t sizeBuf = sizeof(innerBuffer);
   for (int i = 0; i < 4; ++i)

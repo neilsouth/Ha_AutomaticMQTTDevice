@@ -1,6 +1,6 @@
 {
   "name": "HaAutoMQTTDevice",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helper library for auto-registering MQTT devices in Home Assistant",
   "keywords": ["home-assistant", "mqtt"],
   "authors": [
